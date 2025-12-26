@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Text, Pressable } from 'react-native';
 import { DiffView } from '@/components/diff/DiffView';
 import { useSetting } from '@/sync/storage';
+import { useUnistyles } from 'react-native-unistyles';
+import { t } from '@/text';
 
 interface ToolDiffViewProps {
     oldText: string;
@@ -9,6 +11,7 @@ interface ToolDiffViewProps {
     style?: any;
     showLineNumbers?: boolean;
     showPlusMinusSymbols?: boolean;
+    forceVisible?: boolean;
 }
 
 export const ToolDiffView = React.memo<ToolDiffViewProps>(({ 
@@ -16,9 +19,34 @@ export const ToolDiffView = React.memo<ToolDiffViewProps>(({
     newText, 
     style, 
     showLineNumbers = false,
-    showPlusMinusSymbols = false 
+    showPlusMinusSymbols = false,
+    forceVisible = false,
 }) => {
+    const { theme } = useUnistyles();
     const wrapLines = useSetting('wrapLinesInDiffs');
+    const showDiffsInToolViews = useSetting('showDiffsInToolViews');
+    const [revealed, setRevealed] = React.useState(false);
+
+    if (!forceVisible && !showDiffsInToolViews && !revealed) {
+        return (
+            <Pressable
+                onPress={() => setRevealed(true)}
+                style={({ pressed }) => [
+                    {
+                        padding: 12,
+                        borderRadius: 8,
+                        backgroundColor: theme.colors.surfaceHigh,
+                        opacity: pressed ? 0.85 : 1,
+                    },
+                    style,
+                ]}
+            >
+                <Text style={{ color: theme.colors.textSecondary, fontSize: 13 }}>
+                    {t('tools.diffHidden')}
+                </Text>
+            </Pressable>
+        );
+    }
     
     const diffView = (
         <DiffView 

@@ -162,6 +162,8 @@ export const pt: TranslationStructure = {
         showLineNumbersInDiffsDescription: 'Exibir números de linha nos diffs de código',
         showLineNumbersInToolViews: 'Mostrar números de linha nas visualizações de ferramentas',
         showLineNumbersInToolViewsDescription: 'Exibir números de linha nos diffs das visualizações de ferramentas',
+        showDiffsInToolViews: 'Mostrar diffs nas visualizações de ferramentas',
+        showDiffsInToolViewsDescription: 'Exibir diffs dentro dos cards de resultado das ferramentas (Editar/Escrever/Diff)',
         wrapLinesInDiffs: 'Quebrar linhas nos diffs',
         wrapLinesInDiffsDescription: 'Quebrar linhas longas ao invés de rolagem horizontal nas visualizações de diffs',
         alwaysShowContextSize: 'Sempre mostrar tamanho do contexto',
@@ -454,6 +456,8 @@ export const pt: TranslationStructure = {
             running: 'Ferramenta está executando...',
             rawJsonDevMode: 'JSON bruto (modo desenvolvedor)',
         },
+        diffHidden: 'A exibição de diffs está desativada nas configurações',
+        unknownFile: '<arquivo desconhecido>',
         taskView: {
             initializing: 'Inicializando agente...',
             moreTools: ({ count }: { count: number }) => `+${count} mais ${plural({ count, singular: 'ferramenta', plural: 'ferramentas' })}`,

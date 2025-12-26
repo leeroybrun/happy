@@ -162,6 +162,8 @@ export const en = {
         showLineNumbersInDiffsDescription: 'Display line numbers in code diffs',
         showLineNumbersInToolViews: 'Show Line Numbers in Tool Views',
         showLineNumbersInToolViewsDescription: 'Display line numbers in tool view diffs',
+        showDiffsInToolViews: 'Show Diffs in Tool Views',
+        showDiffsInToolViewsDescription: 'Display diffs inside tool result cards (Edit/Write/Diff views)',
         wrapLinesInDiffs: 'Wrap Lines in Diffs',
         wrapLinesInDiffsDescription: 'Wrap long lines instead of horizontal scrolling in diff views',
         alwaysShowContextSize: 'Always Show Context Size',
@@ -454,6 +456,8 @@ export const en = {
             running: 'Tool is running...',
             rawJsonDevMode: 'Raw JSON (Dev Mode)',
         },
+        diffHidden: 'Diff display is disabled in settings',
+        unknownFile: '<unknown file>',
         taskView: {
             initializing: 'Initializing agent...',
             moreTools: ({ count }: { count: number }) => `+${count} more ${plural({ count, singular: 'tool', plural: 'tools' })}`,

@@ -145,6 +145,8 @@ export const ru: TranslationStructure = {
         showLineNumbersInDiffsDescription: 'Отображать номера строк в различиях кода',
         showLineNumbersInToolViews: 'Показывать номера строк в представлениях инструментов',
         showLineNumbersInToolViewsDescription: 'Отображать номера строк в различиях представлений инструментов',
+        showDiffsInToolViews: 'Показывать различия в представлениях инструментов',
+        showDiffsInToolViewsDescription: 'Отображать различия внутри карточек результатов инструментов (Правка/Запись/Различия)',
         wrapLinesInDiffs: 'Перенос строк в различиях',
         wrapLinesInDiffsDescription: 'Переносить длинные строки вместо горизонтальной прокрутки в представлениях различий',
         alwaysShowContextSize: 'Всегда показывать размер контекста',
@@ -464,6 +466,8 @@ export const ru: TranslationStructure = {
             running: 'Выполняется...',
             rawJsonDevMode: 'Исходный JSON (режим разработчика)',
         },
+        diffHidden: 'Отображение различий отключено в настройках',
+        unknownFile: '<неизвестный файл>',
         taskView: {
             initializing: 'Инициализация агента...',
             moreTools: ({ count }: { count: number }) => `+${count} ещё ${plural({ count, one: 'инструмент', few: 'инструмента', many: 'инструментов' })}`,

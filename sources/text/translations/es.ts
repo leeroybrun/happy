@@ -162,6 +162,8 @@ export const es: TranslationStructure = {
         showLineNumbersInDiffsDescription: 'Mostrar números de línea en diferencias de código',
         showLineNumbersInToolViews: 'Mostrar números de línea en vistas de herramientas',
         showLineNumbersInToolViewsDescription: 'Mostrar números de línea en diferencias de vistas de herramientas',
+        showDiffsInToolViews: 'Mostrar diferencias en vistas de herramientas',
+        showDiffsInToolViewsDescription: 'Mostrar diferencias dentro de las tarjetas de resultados de herramientas (Editar/Escribir/Diff)',
         wrapLinesInDiffs: 'Ajustar líneas en diferencias',
         wrapLinesInDiffsDescription: 'Ajustar líneas largas en lugar de desplazamiento horizontal en vistas de diferencias',
         alwaysShowContextSize: 'Mostrar siempre tamaño del contexto',
@@ -454,6 +456,8 @@ export const es: TranslationStructure = {
             running: 'La herramienta está ejecutándose...',
             rawJsonDevMode: 'JSON crudo (modo desarrollador)',
         },
+        diffHidden: 'La visualización de diferencias está desactivada en la configuración',
+        unknownFile: '<archivo desconocido>',
         taskView: {
             initializing: 'Inicializando agente...',
             moreTools: ({ count }: { count: number }) => `+${count} más ${plural({ count, singular: 'herramienta', plural: 'herramientas' })}`,

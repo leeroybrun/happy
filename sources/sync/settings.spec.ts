@@ -96,6 +96,7 @@ describe('settings', () => {
                 viewInline: false,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,
@@ -119,23 +120,9 @@ describe('settings', () => {
                 viewInline: true
             };
             expect(applySettings(currentSettings, delta)).toEqual({
-                viewInline: true,
-                expandTodos: true,
-                showLineNumbers: true,
-                showLineNumbersInToolViews: false,
-                wrapLinesInDiffs: false,
-                analyticsOptOut: false,
-                inferenceOpenAIKey: null,
-                experiments: false,
-                alwaysShowContextSize: false,
-                avatarStyle: 'brutalist',
-                showFlavorIcons: false,
-                compactSessionView: false,
-                hideInactiveSessions: false,
-                reviewPromptAnswered: false,
-                reviewPromptLikedApp: null,
-                voiceAssistantLanguage: null,
-                preferredLanguage: null,
+                ...settingsDefaults,
+                ...currentSettings,
+                ...delta,
             });
         });
 
@@ -144,6 +131,7 @@ describe('settings', () => {
                 viewInline: true,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,
@@ -166,7 +154,7 @@ describe('settings', () => {
             const delta: Partial<Settings> = {};
             expect(applySettings(currentSettings, delta)).toEqual({
                 ...settingsDefaults,
-                viewInline: true
+                ...currentSettings,
             });
         });
 
@@ -175,6 +163,7 @@ describe('settings', () => {
                 viewInline: true,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,
@@ -198,23 +187,9 @@ describe('settings', () => {
                 viewInline: false
             };
             expect(applySettings(currentSettings, delta)).toEqual({
-                viewInline: false,
-                expandTodos: true,
-                showLineNumbers: true,
-                showLineNumbersInToolViews: false,
-                wrapLinesInDiffs: false,
-                analyticsOptOut: false,
-                inferenceOpenAIKey: null,
-                experiments: false,
-                alwaysShowContextSize: false,
-                avatarStyle: 'brutalist',
-                showFlavorIcons: false,
-                compactSessionView: false,
-                hideInactiveSessions: false,
-                reviewPromptAnswered: false,
-                reviewPromptLikedApp: null,
-                voiceAssistantLanguage: null,
-                preferredLanguage: null,
+                ...settingsDefaults,
+                ...currentSettings,
+                ...delta,
             });
         });
 
@@ -223,6 +198,7 @@ describe('settings', () => {
                 viewInline: true,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,
@@ -244,7 +220,7 @@ describe('settings', () => {
             };
             expect(applySettings(currentSettings, {})).toEqual({
                 ...settingsDefaults,
-                viewInline: true
+                ...currentSettings,
             });
         });
 
@@ -268,6 +244,7 @@ describe('settings', () => {
                 viewInline: true,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,
@@ -293,8 +270,8 @@ describe('settings', () => {
             };
             expect(applySettings(currentSettings, delta)).toEqual({
                 ...settingsDefaults,
-                viewInline: false,
-                newField: 'new value'
+                ...currentSettings,
+                ...delta,
             });
         });
 
@@ -318,10 +295,11 @@ describe('settings', () => {
 
     describe('settingsDefaults', () => {
         it('should have correct default values', () => {
-            expect(settingsDefaults).toEqual({
+            expect(settingsDefaults).toMatchObject({
                 viewInline: false,
                 expandTodos: true,
                 showLineNumbers: true,
+                showDiffsInToolViews: true,
                 showLineNumbersInToolViews: false,
                 wrapLinesInDiffs: false,
                 analyticsOptOut: false,

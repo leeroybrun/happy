@@ -162,6 +162,8 @@ export const ca: TranslationStructure = {
         showLineNumbersInDiffsDescription: 'Mostra els números de línia a les diferències de codi',
         showLineNumbersInToolViews: 'Mostra els números de línia a les vistes d\'eines',
         showLineNumbersInToolViewsDescription: 'Mostra els números de línia a les diferències de vistes d\'eines',
+        showDiffsInToolViews: 'Mostra diferències a les vistes d\'eines',
+        showDiffsInToolViewsDescription: 'Mostra diferències dins de les targetes de resultat d\'eines (Edita/Escriu/Diff)',
         wrapLinesInDiffs: 'Ajusta les línies a les diferències',
         wrapLinesInDiffsDescription: 'Ajusta les línies llargues en lloc de desplaçament horitzontal a les vistes de diferències',
         alwaysShowContextSize: 'Mostra sempre la mida del context',
@@ -454,6 +456,8 @@ export const ca: TranslationStructure = {
             running: 'L\'eina s\'està executant...',
             rawJsonDevMode: 'JSON en brut (mode desenvolupador)',
         },
+        diffHidden: 'La visualització de diferències està desactivada a la configuració',
+        unknownFile: '<fitxer desconegut>',
         taskView: {
             initializing: 'Inicialitzant l\'agent...',
             moreTools: ({ count }: { count: number }) => `+${count} més ${plural({ count, singular: 'eina', plural: 'eines' })}`,

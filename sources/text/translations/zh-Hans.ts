@@ -164,6 +164,8 @@ export const zhHans: TranslationStructure = {
         showLineNumbersInDiffsDescription: '在代码差异中显示行号',
         showLineNumbersInToolViews: '在工具视图中显示行号',
         showLineNumbersInToolViewsDescription: '在工具视图差异中显示行号',
+        showDiffsInToolViews: '在工具视图中显示差异',
+        showDiffsInToolViewsDescription: '在工具结果卡片中显示差异（编辑/写入/差异视图）',
         wrapLinesInDiffs: '在差异中换行',
         wrapLinesInDiffsDescription: '在差异视图中换行显示长行而不是水平滚动',
         alwaysShowContextSize: '始终显示上下文大小',
@@ -456,6 +458,8 @@ export const zhHans: TranslationStructure = {
             running: '工具正在运行...',
             rawJsonDevMode: '原始 JSON（开发模式）',
         },
+        diffHidden: '差异显示已在设置中关闭',
+        unknownFile: '<未知文件>',
         taskView: {
             initializing: '正在初始化 agent...',
             moreTools: ({ count }: { count: number }) => `+${count} 个更多${plural({ count, singular: '工具', plural: '工具' })}`,

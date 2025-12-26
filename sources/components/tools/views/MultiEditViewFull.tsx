@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { ToolCall } from '@/sync/typesMessage';
 import { Metadata } from '@/sync/storageTypes';
 import { knownTools } from '@/components/tools/knownTools';
@@ -8,6 +8,7 @@ import { DiffView } from '@/components/diff/DiffView';
 import { trimIdent } from '@/utils/trimIdent';
 import { t } from '@/text';
 import { useSetting } from '@/sync/storage';
+import { useUnistyles } from 'react-native-unistyles';
 
 interface MultiEditViewFullProps {
     tool: ToolCall;
@@ -15,8 +16,11 @@ interface MultiEditViewFullProps {
 }
 
 export const MultiEditViewFull = React.memo<MultiEditViewFullProps>(({ tool, metadata }) => {
+    const { theme } = useUnistyles();
     const { input } = tool;
     const wrapLinesInDiffs = useSetting('wrapLinesInDiffs');
+    const showDiffsInToolViews = useSetting('showDiffsInToolViews');
+    const [revealed, setRevealed] = React.useState(false);
 
     // Parse the input
     let edits: Array<{ old_string: string; new_string: string; replace_all?: boolean }> = [];
@@ -28,6 +32,28 @@ export const MultiEditViewFull = React.memo<MultiEditViewFullProps>(({ tool, met
 
     if (edits.length === 0) {
         return null;
+    }
+
+    if (!showDiffsInToolViews && !revealed) {
+        return (
+            <View style={toolFullViewStyles.sectionFullWidth}>
+                <Pressable
+                    onPress={() => setRevealed(true)}
+                    style={({ pressed }) => [
+                        {
+                            padding: 12,
+                            borderRadius: 8,
+                            backgroundColor: theme.colors.surfaceHigh,
+                            opacity: pressed ? 0.85 : 1,
+                        },
+                    ]}
+                >
+                    <Text style={{ color: theme.colors.textSecondary, fontSize: 13 }}>
+                        {t('tools.diffHidden')} ({edits.length})
+                    </Text>
+                </Pressable>
+            </View>
+        );
     }
 
     const content = (

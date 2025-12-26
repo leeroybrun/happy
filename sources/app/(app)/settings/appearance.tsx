@@ -25,6 +25,7 @@ export default function AppearanceSettingsScreen() {
     const [viewInline, setViewInline] = useSettingMutable('viewInline');
     const [expandTodos, setExpandTodos] = useSettingMutable('expandTodos');
     const [showLineNumbers, setShowLineNumbers] = useSettingMutable('showLineNumbers');
+    const [showDiffsInToolViews, setShowDiffsInToolViews] = useSettingMutable('showDiffsInToolViews');
     const [showLineNumbersInToolViews, setShowLineNumbersInToolViews] = useSettingMutable('showLineNumbersInToolViews');
     const [wrapLinesInDiffs, setWrapLinesInDiffs] = useSettingMutable('wrapLinesInDiffs');
     const [alwaysShowContextSize, setAlwaysShowContextSize] = useSettingMutable('alwaysShowContextSize');
@@ -173,6 +174,17 @@ export default function AppearanceSettingsScreen() {
                         <Switch
                             value={showLineNumbersInToolViews}
                             onValueChange={setShowLineNumbersInToolViews}
+                        />
+                    }
+                />
+                <Item
+                    title={t('settingsAppearance.showDiffsInToolViews')}
+                    subtitle={t('settingsAppearance.showDiffsInToolViewsDescription')}
+                    icon={<Ionicons name="git-compare-outline" size={29} color="#5856D6" />}
+                    rightElement={
+                        <Switch
+                            value={showDiffsInToolViews}
+                            onValueChange={setShowDiffsInToolViews}
                         />
                     }
                 />

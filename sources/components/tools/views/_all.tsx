@@ -11,6 +11,8 @@ import { TaskView } from './TaskView';
 import { BashViewFull } from './BashViewFull';
 import { EditViewFull } from './EditViewFull';
 import { MultiEditViewFull } from './MultiEditViewFull';
+import { NotebookEditView } from './NotebookEditView';
+import { NotebookEditViewFull } from './NotebookEditViewFull';
 import { CodexBashView } from './CodexBashView';
 import { CodexPatchView } from './CodexPatchView';
 import { CodexDiffView } from './CodexDiffView';
@@ -32,6 +34,7 @@ export const toolViewRegistry: Record<string, ToolViewComponent> = {
     CodexPatch: CodexPatchView,
     CodexDiff: CodexDiffView,
     Write: WriteView,
+    NotebookEdit: NotebookEditView,
     TodoWrite: TodoView,
     ExitPlanMode: ExitPlanToolView,
     exit_plan_mode: ExitPlanToolView,
@@ -42,7 +45,8 @@ export const toolViewRegistry: Record<string, ToolViewComponent> = {
 export const toolFullViewRegistry: Record<string, ToolViewComponent> = {
     Bash: BashViewFull,
     Edit: EditViewFull,
-    MultiEdit: MultiEditViewFull
+    MultiEdit: MultiEditViewFull,
+    NotebookEdit: NotebookEditViewFull,
 };
 
 // Helper function to get the appropriate view component for a tool
@@ -64,6 +68,8 @@ export { CodexDiffView } from './CodexDiffView';
 export { BashViewFull } from './BashViewFull';
 export { EditViewFull } from './EditViewFull';
 export { MultiEditViewFull } from './MultiEditViewFull';
+export { NotebookEditViewFull } from './NotebookEditViewFull';
 export { ExitPlanToolView } from './ExitPlanToolView';
 export { MultiEditView } from './MultiEditView';
 export { TaskView } from './TaskView';
+export { NotebookEditView } from './NotebookEditView';

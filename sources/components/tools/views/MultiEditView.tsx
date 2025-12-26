@@ -1,15 +1,20 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { ToolSectionView } from '../../tools/ToolSectionView';
 import { ToolViewProps } from './_all';
 import { DiffView } from '@/components/diff/DiffView';
 import { knownTools } from '../../tools/knownTools';
 import { trimIdent } from '@/utils/trimIdent';
 import { useSetting } from '@/sync/storage';
+import { useUnistyles } from 'react-native-unistyles';
+import { t } from '@/text';
 
 export const MultiEditView = React.memo<ToolViewProps>(({ tool }) => {
+    const { theme } = useUnistyles();
     const showLineNumbersInToolViews = useSetting('showLineNumbersInToolViews');
     const wrapLinesInDiffs = useSetting('wrapLinesInDiffs');
+    const showDiffsInToolViews = useSetting('showDiffsInToolViews');
+    const [revealed, setRevealed] = React.useState(false);
     
     let edits: Array<{ old_string: string; new_string: string; replace_all?: boolean }> = [];
     
@@ -20,6 +25,28 @@ export const MultiEditView = React.memo<ToolViewProps>(({ tool }) => {
 
     if (edits.length === 0) {
         return null;
+    }
+
+    if (!showDiffsInToolViews && !revealed) {
+        return (
+            <ToolSectionView fullWidth>
+                <Pressable
+                    onPress={() => setRevealed(true)}
+                    style={({ pressed }) => [
+                        {
+                            padding: 12,
+                            borderRadius: 8,
+                            backgroundColor: theme.colors.surfaceHigh,
+                            opacity: pressed ? 0.85 : 1,
+                        },
+                    ]}
+                >
+                    <Text style={{ color: theme.colors.textSecondary, fontSize: 13 }}>
+                        {t('tools.diffHidden')} ({edits.length})
+                    </Text>
+                </Pressable>
+            </ToolSectionView>
+        );
     }
 
     const content = (

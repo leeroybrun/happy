@@ -579,13 +579,19 @@ export const knownTools = {
             // Try to extract filename from unified diff
             if (opts.tool.input?.unified_diff && typeof opts.tool.input.unified_diff === 'string') {
                 const diffLines = opts.tool.input.unified_diff.split('\n');
+                const files: string[] = [];
                 for (const line of diffLines) {
                     if (line.startsWith('+++ b/') || line.startsWith('+++ ')) {
                         const fileName = line.replace(/^\+\+\+ (b\/)?/, '');
+                        if (fileName === '/dev/null') continue;
                         const basename = fileName.split('/').pop() || fileName;
-                        return basename;
+                        if (!files.includes(basename)) {
+                            files.push(basename);
+                        }
                     }
                 }
+                if (files.length === 1) return files[0];
+                if (files.length > 1) return `${files[0]} (+${files.length - 1})`;
             }
             return null;
         },
