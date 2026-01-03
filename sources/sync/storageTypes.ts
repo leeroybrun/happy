@@ -16,6 +16,7 @@ export const MetadataSchema = z.object({
     }).optional(),
     machineId: z.string().optional(),
     claudeSessionId: z.string().optional(), // Claude Code session ID
+    codexSessionId: z.string().optional(), // Codex session/conversation ID (uuid)
     tools: z.array(z.string()).optional(),
     slashCommands: z.array(z.string()).optional(),
     homeDir: z.string().optional(), // User's home directory on the machine
@@ -70,6 +71,7 @@ export interface Session {
     }>;
     draft?: string | null; // Local draft message, not synced to server
     permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions' | 'plan' | 'read-only' | 'safe-yolo' | 'yolo' | null; // Local permission mode, not synced to server
+    permissionModeExplicit?: boolean; // Whether permissionMode was explicitly set locally (vs inferred/defaulted)
     modelMode?: 'default' | null; // Local model mode, not synced to server (models configured in CLI)
     // IMPORTANT: latestUsage is extracted from reducerState.latestUsage after message processing.
     // We store it directly on Session to ensure it's available immediately on load.

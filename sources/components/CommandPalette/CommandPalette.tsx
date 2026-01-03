@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         maxWidth: 800, // Increased from 640 for wider input
         // Use viewport-based height for better layout
         ...(Platform.OS === 'web' ? {
-            maxHeight: '60vh', // Takes up to 60% of viewport height
+            maxHeight: 'calc(var(--vvh, 1vh) * 60)', // 60% of *visual* viewport height (keyboard-friendly on iOS)
         } as any : {
             maxHeight: 500, // Fallback for native
         }),

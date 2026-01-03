@@ -31,6 +31,8 @@ import { voiceHooks } from '@/realtime/hooks/voiceHooks';
 import { Message } from './typesMessage';
 import { EncryptionCache } from './encryption/encryptionCache';
 import { systemPrompt } from './prompt/systemPrompt';
+import { coercePermissionModeForFlavor, getDefaultPermissionModeForFlavor } from './permissionModeDefaults';
+import type { PermissionMode } from '@/components/PermissionModeSelector';
 import { fetchArtifact, fetchArtifacts, createArtifact, updateArtifact } from './apiArtifacts';
 import { DecryptedArtifact, Artifact, ArtifactCreateRequest, ArtifactUpdateRequest } from './artifactTypes';
 import { ArtifactEncryption } from './encryption/artifactEncryption';
@@ -344,7 +346,19 @@ class Sync {
         }
 
         // Read permission mode and model mode from session state
-        const permissionMode = session.permissionMode || 'default';
+        const settings = storage.getState().settings;
+        const globalDefaultPermissionMode = getDefaultPermissionModeForFlavor({
+            flavor: session.metadata?.flavor,
+            defaultPermissionModeClaude: settings.defaultPermissionModeClaude,
+            defaultPermissionModeCodex: settings.defaultPermissionModeCodex,
+        });
+
+        let permissionMode: PermissionMode = coercePermissionModeForFlavor(session.permissionMode, session.metadata?.flavor) as PermissionMode;
+        if (!session.permissionModeExplicit && permissionMode === 'default' && globalDefaultPermissionMode !== 'default') {
+            // Existing session with no explicit per-session permission mode: apply the user's global default.
+            storage.getState().updateSessionPermissionMode(sessionId, globalDefaultPermissionMode);
+            permissionMode = globalDefaultPermissionMode as PermissionMode;
+        }
         const modelMode = session.modelMode || 'default';
 
         // Generate local ID

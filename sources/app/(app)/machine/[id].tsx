@@ -5,7 +5,7 @@ import { Item } from '@/components/Item';
 import { ItemGroup } from '@/components/ItemGroup';
 import { ItemList } from '@/components/ItemList';
 import { Typography } from '@/constants/Typography';
-import { useSessions, useAllMachines, useMachine } from '@/sync/storage';
+import { storage, useSessions, useAllMachines, useMachine, useSetting } from '@/sync/storage';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import type { Session } from '@/sync/storageTypes';
 import { machineStopDaemon, machineUpdateMetadata } from '@/sync/ops';
@@ -68,6 +68,7 @@ export default function MachineDetailScreen() {
     const router = useRouter();
     const sessions = useSessions();
     const machine = useMachine(machineId!);
+    const defaultPermissionModeClaude = useSetting('defaultPermissionModeClaude');
     const navigateToSession = useNavigateToSession();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isStoppingDaemon, setIsStoppingDaemon] = useState(false);
@@ -218,6 +219,7 @@ export default function MachineDetailScreen() {
             });
             switch (result.type) {
                 case 'success':
+                    storage.getState().updateSessionPermissionMode(result.sessionId, defaultPermissionModeClaude ?? 'default');
                     // Dismiss machine picker & machine detail screen
                     router.back();
                     router.back();

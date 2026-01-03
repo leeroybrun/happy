@@ -10,9 +10,9 @@ import { LocalSettings, applyLocalSettings } from "./localSettings";
 import { Purchases, customerInfoToPurchases } from "./purchases";
 import { TodoState } from "../-zen/model/ops";
 import { Profile } from "./profile";
+import { coercePermissionModeForFlavor, getDefaultPermissionModeForFlavor } from "./permissionModeDefaults";
 import { UserProfile, RelationshipUpdatedEvent } from "./friendTypes";
 import { loadSettings, loadLocalSettings, saveLocalSettings, saveSettings, loadPurchases, savePurchases, loadProfile, saveProfile, loadSessionDrafts, saveSessionDrafts, loadSessionPermissionModes, saveSessionPermissionModes } from "./persistence";
-import type { PermissionMode } from '@/components/PermissionModeSelector';
 import type { CustomerInfo } from './revenueCat/types';
 import React from "react";
 import { sync } from "./sync";
@@ -314,16 +314,40 @@ export const storage = create<StorageState>()((set, get) => {
                 // Preserve existing draft and permission mode if they exist, or load from saved data
                 const existingDraft = state.sessions[session.id]?.draft;
                 const savedDraft = savedDrafts[session.id];
-                const existingPermissionMode = state.sessions[session.id]?.permissionMode;
-                const savedPermissionMode = sessionPermissionModes[session.id];
-                const resolvedPermissionMode = existingPermissionMode && existingPermissionMode !== 'default'
-                    ? existingPermissionMode
-                    : (savedPermissionMode || session.permissionMode || existingPermissionMode || 'default');
+                const existingPermissionMode = state.sessions[session.id]?.permissionMode ?? undefined;
+                const hasSavedPermissionMode = Object.prototype.hasOwnProperty.call(sessionPermissionModes, session.id);
+                const savedPermissionMode = hasSavedPermissionMode ? sessionPermissionModes[session.id] : undefined;
+                const existingExplicit = state.sessions[session.id]?.permissionModeExplicit ?? false;
+
+                // Apply the user's global default permission mode only for NEW sessions discovered after initial load.
+                // This avoids changing the effective mode of pre-existing sessions on app startup.
+                const shouldApplyGlobalDefault = state.isDataReady && !state.sessions[session.id];
+
+                const globalDefaultPermissionMode = getDefaultPermissionModeForFlavor({
+                    flavor: session.metadata?.flavor,
+                    defaultPermissionModeClaude: state.settings.defaultPermissionModeClaude,
+                    defaultPermissionModeCodex: state.settings.defaultPermissionModeCodex,
+                });
+
+                const resolvedPermissionMode = coercePermissionModeForFlavor(
+                    savedPermissionMode
+                    ?? existingPermissionMode
+                    ?? session.permissionMode
+                    ?? (shouldApplyGlobalDefault ? globalDefaultPermissionMode : 'default'),
+                    session.metadata?.flavor
+                );
+
+                // Persist global-default assignment for new sessions so it survives reloads.
+                if (shouldApplyGlobalDefault && !hasSavedPermissionMode && resolvedPermissionMode !== 'default') {
+                    sessionPermissionModes[session.id] = resolvedPermissionMode;
+                    saveSessionPermissionModes(sessionPermissionModes);
+                }
                 mergedSessions[session.id] = {
                     ...session,
                     presence,
                     draft: existingDraft || savedDraft || session.draft || null,
-                    permissionMode: resolvedPermissionMode
+                    permissionMode: resolvedPermissionMode,
+                    permissionModeExplicit: existingExplicit || hasSavedPermissionMode || (shouldApplyGlobalDefault && resolvedPermissionMode !== 'default'),
                 };
             });
 
@@ -785,11 +809,7 @@ export const storage = create<StorageState>()((set, get) => {
             // Persist permission modes even if the session isn't loaded yet.
             // This is important for newly created sessions where we want the first render
             // to show the intended permission mode, even if applySessions runs later.
-            if (mode !== 'default') {
-                sessionPermissionModes[sessionId] = mode;
-            } else {
-                delete sessionPermissionModes[sessionId];
-            }
+            sessionPermissionModes[sessionId] = mode;
             saveSessionPermissionModes(sessionPermissionModes);
 
             if (!session) return state;
@@ -799,7 +819,8 @@ export const storage = create<StorageState>()((set, get) => {
                 ...state.sessions,
                 [sessionId]: {
                     ...session,
-                    permissionMode: mode
+                    permissionMode: mode,
+                    permissionModeExplicit: true
                 }
             };
 

@@ -18,6 +18,7 @@ export interface NewSessionDraft {
     agentType: NewSessionAgentType;
     permissionMode: PermissionMode;
     sessionType: NewSessionSessionType;
+    resumeSessionId?: string | null;
     updatedAt: number;
 }
 
@@ -146,6 +147,7 @@ export function loadNewSessionDraft(): NewSessionDraft | null {
             ? (parsed.permissionMode as PermissionMode)
             : 'default';
         const sessionType: NewSessionSessionType = parsed.sessionType === 'worktree' ? 'worktree' : 'simple';
+        const resumeSessionId = typeof parsed.resumeSessionId === 'string' ? parsed.resumeSessionId : null;
         const updatedAt = typeof parsed.updatedAt === 'number' ? parsed.updatedAt : Date.now();
 
         return {
@@ -155,6 +157,7 @@ export function loadNewSessionDraft(): NewSessionDraft | null {
             agentType,
             permissionMode,
             sessionType,
+            resumeSessionId,
             updatedAt,
         };
     } catch (e) {

@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // Position at 30% from top of viewport
         ...(Platform.OS === 'web' ? {
-            paddingTop: '30vh',
+            paddingTop: 'calc(var(--vvh, 1vh) * 30)',
         } as any : {
             paddingTop: 200, // Fallback for native
         })

@@ -31,6 +31,8 @@ export const SettingsSchema = z.object({
     lastUsedAgent: z.string().nullable().describe('Last selected agent type for new sessions'),
     lastUsedPermissionMode: z.string().nullable().describe('Last selected permission mode for new sessions'),
     lastUsedModelMode: z.string().nullable().describe('Last selected model mode for new sessions'),
+    defaultPermissionModeClaude: z.enum(['default', 'acceptEdits', 'plan', 'bypassPermissions']).nullable().describe('Default permission mode for new Claude sessions (null = use last used / CLI defaults)'),
+    defaultPermissionModeCodex: z.enum(['default', 'read-only', 'safe-yolo', 'yolo']).nullable().describe('Default permission mode for new Codex/Gemini sessions (null = use last used / CLI defaults)'),
 });
 
 //
@@ -76,6 +78,8 @@ export const settingsDefaults: Settings = {
     lastUsedAgent: null,
     lastUsedPermissionMode: null,
     lastUsedModelMode: null,
+    defaultPermissionModeClaude: null,
+    defaultPermissionModeCodex: null,
 };
 Object.freeze(settingsDefaults);
 

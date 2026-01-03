@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     container: {
         // Use viewport-based height for better proportions
         ...(Platform.OS === 'web' ? {
-            maxHeight: '40vh', // 40% of viewport height for results
+            maxHeight: 'calc(var(--vvh, 1vh) * 40)', // 40% of *visual* viewport height (keyboard-friendly on iOS)
         } as any : {
             maxHeight: 420, // Fallback for native
         }),

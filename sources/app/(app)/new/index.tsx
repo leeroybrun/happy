@@ -76,11 +76,12 @@ const updateRecentMachinePaths = (
 function NewSessionScreen() {
     const { theme } = useUnistyles();
     const router = useRouter();
-    const { prompt, dataId, machineId: machineIdParam, path: pathParam } = useLocalSearchParams<{
+    const { prompt, dataId, machineId: machineIdParam, path: pathParam, resumeSessionId: resumeSessionIdParam } = useLocalSearchParams<{
         prompt?: string;
         dataId?: string;
         machineId?: string;
         path?: string;
+        resumeSessionId?: string;
     }>();
 
     // Try to get data from temporary store first, fallback to direct prompt parameter
@@ -99,6 +100,14 @@ function NewSessionScreen() {
         }
         return prompt || persistedDraft?.input || '';
     });
+    const [resumeSessionId, setResumeSessionId] = React.useState(() => {
+        const fromTemp = tempSessionData?.resumeSessionId;
+        if (typeof fromTemp === 'string') {
+            return fromTemp;
+        }
+        const fromDraft = persistedDraft?.resumeSessionId;
+        return typeof fromDraft === 'string' ? fromDraft : '';
+    });
     const [isSending, setIsSending] = React.useState(false);
     const [sessionType, setSessionType] = React.useState<'simple' | 'worktree'>(() => {
         if (tempSessionData?.sessionType) {
@@ -115,6 +124,8 @@ function NewSessionScreen() {
     const recentMachinePaths = useSetting('recentMachinePaths');
     const lastUsedAgent = useSetting('lastUsedAgent');
     const lastUsedPermissionMode = useSetting('lastUsedPermissionMode');
+    const defaultPermissionModeClaude = useSetting('defaultPermissionModeClaude');
+    const defaultPermissionModeCodex = useSetting('defaultPermissionModeCodex');
     const experimentsEnabled = useSetting('experiments');
 
     //
@@ -214,6 +225,14 @@ function NewSessionScreen() {
         setSelectedPath(trimmedPath);
     }, [pathParam]);
 
+    // Handle resumeSessionId param from the resume picker screen
+    React.useEffect(() => {
+        if (typeof resumeSessionIdParam !== 'string') {
+            return;
+        }
+        setResumeSessionId(resumeSessionIdParam);
+    }, [resumeSessionIdParam]);
+
     const handleMachineClick = React.useCallback(() => {
         router.push({
             pathname: '/new/pick/machine',
@@ -274,18 +293,37 @@ function NewSessionScreen() {
     //
 
     const [permissionMode, setPermissionMode] = React.useState<PermissionMode>(() => {
-        // Initialize with last used permission mode if valid, otherwise default to 'default'
-        const validClaudeGeminiModes: PermissionMode[] = ['default', 'acceptEdits', 'plan', 'bypassPermissions'];
+        const validClaudeModes: PermissionMode[] = ['default', 'acceptEdits', 'plan', 'bypassPermissions'];
         const validCodexModes: PermissionMode[] = ['default', 'read-only', 'safe-yolo', 'yolo'];
 
-        const permissionModeFromDraft = persistedDraft?.permissionMode ?? lastUsedPermissionMode;
+        const permissionModeFromDraft = persistedDraft?.permissionMode;
         if (permissionModeFromDraft) {
-            if (agentType === 'codex' && validCodexModes.includes(permissionModeFromDraft as PermissionMode)) {
+            if ((agentType === 'codex' || agentType === 'gemini') && validCodexModes.includes(permissionModeFromDraft as PermissionMode)) {
                 return permissionModeFromDraft as PermissionMode;
-            } else if ((agentType === 'claude' || agentType === 'gemini') && validClaudeGeminiModes.includes(permissionModeFromDraft as PermissionMode)) {
+            }
+            if (agentType === 'claude' && validClaudeModes.includes(permissionModeFromDraft as PermissionMode)) {
                 return permissionModeFromDraft as PermissionMode;
             }
         }
+
+        // Prefer explicit default settings when present.
+        if ((agentType === 'codex' || agentType === 'gemini') && defaultPermissionModeCodex) {
+            return defaultPermissionModeCodex as PermissionMode;
+        }
+        if (agentType === 'claude' && defaultPermissionModeClaude) {
+            return defaultPermissionModeClaude as PermissionMode;
+        }
+
+        // Fall back to last-used (backwards compatible behavior) when defaults are not overridden.
+        if (lastUsedPermissionMode) {
+            if ((agentType === 'codex' || agentType === 'gemini') && validCodexModes.includes(lastUsedPermissionMode as PermissionMode)) {
+                return lastUsedPermissionMode as PermissionMode;
+            }
+            if (agentType === 'claude' && validClaudeModes.includes(lastUsedPermissionMode as PermissionMode)) {
+                return lastUsedPermissionMode as PermissionMode;
+            }
+        }
+
         return 'default';
     });
 
@@ -296,8 +334,12 @@ function NewSessionScreen() {
             hasMountedRef.current = true;
             return;
         }
-        setPermissionMode('default');
-    }, [agentType]);
+        if (agentType === 'claude') {
+            setPermissionMode(defaultPermissionModeClaude ?? 'default');
+            return;
+        }
+        setPermissionMode(defaultPermissionModeCodex ?? 'default');
+    }, [agentType, defaultPermissionModeClaude, defaultPermissionModeCodex]);
 
     const handlePermissionModeChange = React.useCallback((mode: PermissionMode) => {
         setPermissionMode(mode);
@@ -328,6 +370,16 @@ function NewSessionScreen() {
             });
         }
     }, [selectedMachineId, selectedPath, router]);
+
+    const handleResumeClick = React.useCallback(() => {
+        router.push({
+            pathname: '/new/pick/resume' as any,
+            params: {
+                currentResumeId: resumeSessionId,
+                agentType,
+            },
+        });
+    }, [router, resumeSessionId, agentType]);
 
     // Get selected machine name
     const selectedMachine = React.useMemo(() => {
@@ -394,7 +446,8 @@ function NewSessionScreen() {
                 directory: actualPath,
                 // For now we assume you already have a path to start in
                 approvedNewDirectoryCreation: true,
-                agent: agentType
+                agent: agentType,
+                resume: (agentType === 'claude' || agentType === 'codex') ? (resumeSessionId.trim() || undefined) : undefined,
             });
 
             // Use sessionId to check for success for backwards compatibility
@@ -467,6 +520,7 @@ function NewSessionScreen() {
                 agentType,
                 permissionMode,
                 sessionType,
+                resumeSessionId,
                 updatedAt: Date.now(),
             });
         }, 250);
@@ -475,7 +529,7 @@ function NewSessionScreen() {
                 clearTimeout(draftSaveTimerRef.current);
             }
         };
-    }, [input, selectedMachineId, selectedPath, agentType, permissionMode, sessionType]);
+    }, [input, selectedMachineId, selectedPath, agentType, permissionMode, sessionType, resumeSessionId]);
 
     return (
         <KeyboardAvoidingView
@@ -533,6 +587,43 @@ function NewSessionScreen() {
                     <View style={[
                         { maxWidth: layout.maxWidth, flex: 1 }
                     ]}>
+                        {(agentType === 'claude' || agentType === 'codex') && (
+                            <Pressable
+                                onPress={handleResumeClick}
+                                style={(p) => ({
+                                    backgroundColor: theme.colors.input.background,
+                                    borderRadius: Platform.select({ default: 16, android: 20 }),
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 10,
+                                    marginBottom: 8,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    opacity: p.pressed ? 0.7 : 1,
+                                })}
+                            >
+                                <Ionicons
+                                    name="refresh-outline"
+                                    size={14}
+                                    color={resumeSessionId.trim()
+                                        ? theme.colors.button.primary.background
+                                        : theme.colors.textSecondary}
+                                />
+                                <Text style={{
+                                    fontSize: 13,
+                                    color: resumeSessionId.trim()
+                                        ? theme.colors.button.primary.background
+                                        : theme.colors.textSecondary,
+                                    fontWeight: '600',
+                                    marginLeft: 6,
+                                    ...Typography.default('semiBold'),
+                                }}>
+                                    {resumeSessionId.trim()
+                                        ? `${t('newSession.resume.rowPrefix')} ${resumeSessionId.substring(0, 8)}…${resumeSessionId.substring(resumeSessionId.length - 6)}`
+                                        : t('newSession.resume.rowNone')}
+                                </Text>
+                            </Pressable>
+                        )}
+
                         <Pressable
                             onPress={handlePathClick}
                             style={(p) => ({
