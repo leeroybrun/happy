@@ -76,11 +76,12 @@ const updateRecentMachinePaths = (
 function NewSessionScreen() {
     const { theme } = useUnistyles();
     const router = useRouter();
-    const { prompt, dataId, machineId: machineIdParam, path: pathParam } = useLocalSearchParams<{
+    const { prompt, dataId, machineId: machineIdParam, path: pathParam, resumeSessionId: resumeSessionIdParam } = useLocalSearchParams<{
         prompt?: string;
         dataId?: string;
         machineId?: string;
         path?: string;
+        resumeSessionId?: string;
     }>();
 
     // Try to get data from temporary store first, fallback to direct prompt parameter
@@ -98,6 +99,15 @@ function NewSessionScreen() {
             return tempSessionData.prompt;
         }
         return prompt || persistedDraft?.input || '';
+    });
+    const [resumeSessionId, setResumeSessionId] = React.useState(() => {
+        if (typeof tempSessionData?.resumeSessionId === 'string') {
+            return tempSessionData.resumeSessionId;
+        }
+        if (typeof persistedDraft?.resumeSessionId === 'string') {
+            return persistedDraft.resumeSessionId;
+        }
+        return typeof resumeSessionIdParam === 'string' ? resumeSessionIdParam : '';
     });
     const [isSending, setIsSending] = React.useState(false);
     const [sessionType, setSessionType] = React.useState<'simple' | 'worktree'>(() => {
@@ -329,6 +339,24 @@ function NewSessionScreen() {
         }
     }, [selectedMachineId, selectedPath, router]);
 
+    const handleResumeClick = React.useCallback(() => {
+        router.push({
+            pathname: '/new/pick/resume' as any,
+            params: {
+                currentResumeId: resumeSessionId,
+                agentType,
+            },
+        });
+    }, [router, resumeSessionId, agentType]);
+
+    // Handle resumeSessionId param from the resume picker screen
+    React.useEffect(() => {
+        if (typeof resumeSessionIdParam !== 'string') {
+            return;
+        }
+        setResumeSessionId(resumeSessionIdParam);
+    }, [resumeSessionIdParam]);
+
     // Get selected machine name
     const selectedMachine = React.useMemo(() => {
         if (!selectedMachineId) return null;
@@ -394,7 +422,8 @@ function NewSessionScreen() {
                 directory: actualPath,
                 // For now we assume you already have a path to start in
                 approvedNewDirectoryCreation: true,
-                agent: agentType
+                agent: agentType,
+                resume: (agentType === 'claude' || agentType === 'codex') ? (resumeSessionId.trim() || undefined) : undefined,
             });
 
             // Use sessionId to check for success for backwards compatibility
@@ -451,7 +480,7 @@ function NewSessionScreen() {
         } finally {
             setIsSending(false);
         }
-    }, [agentType, selectedMachineId, selectedPath, input, recentMachinePaths, sessionType, experimentsEnabled, permissionMode]);
+    }, [agentType, selectedMachineId, selectedPath, input, recentMachinePaths, sessionType, experimentsEnabled, permissionMode, resumeSessionId]);
 
     // Persist the current modal state so it survives remounts and reopen/close
     const draftSaveTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -533,6 +562,38 @@ function NewSessionScreen() {
                     <View style={[
                         { maxWidth: layout.maxWidth, flex: 1 }
                     ]}>
+                        {(agentType === 'claude' || agentType === 'codex') && (
+                            <Pressable
+                                onPress={handleResumeClick}
+                                style={(p) => ({
+                                    backgroundColor: theme.colors.input.background,
+                                    borderRadius: Platform.select({ default: 16, android: 20 }),
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 10,
+                                    marginBottom: 8,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    opacity: p.pressed ? 0.7 : 1,
+                                })}
+                            >
+                                <Ionicons
+                                    name="play-circle-outline"
+                                    size={14}
+                                    color={theme.colors.button.secondary.tint}
+                                />
+                                <Text style={{
+                                    fontSize: 13,
+                                    color: theme.colors.button.secondary.tint,
+                                    fontWeight: '600',
+                                    marginLeft: 6,
+                                    ...Typography.default('semiBold'),
+                                }}>
+                                    {resumeSessionId.trim()
+                                        ? `${t('newSession.resume.title')}: ${resumeSessionId.substring(0, 8)}...${resumeSessionId.substring(resumeSessionId.length - 8)}`
+                                        : t('newSession.resume.optional')}
+                                </Text>
+                            </Pressable>
+                        )}
                         <Pressable
                             onPress={handlePathClick}
                             style={(p) => ({

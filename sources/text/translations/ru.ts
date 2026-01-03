@@ -260,7 +260,20 @@ export const ru: TranslationStructure = {
             notGitRepo: 'Worktree требует наличия git репозитория',
             failed: ({ error }: { error: string }) => `Не удалось создать worktree: ${error}`,
             success: 'Worktree успешно создан',
-        }
+        },
+        resume: {
+            title: 'Продолжить сессию',
+            optional: 'Продолжить: необязательно',
+            pickerTitle: 'Продолжить сессию',
+            subtitleClaude: 'Вставьте ID сессии Claude для продолжения',
+            subtitleCodex: 'Вставьте ID сессии Codex для продолжения',
+            placeholderClaude: 'Вставьте ID сессии Claude…',
+            placeholderCodex: 'Вставьте ID сессии Codex…',
+            paste: 'Вставить',
+            save: 'Сохранить',
+            clearAndRemove: 'Очистить',
+            helpText: 'ID сессии можно найти на экране информации о сессии.',
+        },
     },
 
     sessionHistory: {
@@ -304,6 +317,9 @@ export const ru: TranslationStructure = {
         claudeCodeSessionIdCopied: 'ID сессии Claude Code скопирован в буфер обмена',
         aiProvider: 'Поставщик ИИ',
         failedToCopyClaudeCodeSessionId: 'Не удалось скопировать ID сессии Claude Code',
+        codexSessionId: 'ID сессии Codex',
+        codexSessionIdCopied: 'ID сессии Codex скопирован в буфер обмена',
+        failedToCopyCodexSessionId: 'Не удалось скопировать ID сессии Codex',
         metadataCopied: 'Метаданные скопированы в буфер обмена',
         failedToCopyMetadata: 'Не удалось скопировать метаданные',
         failedToKillSession: 'Не удалось завершить сессию',

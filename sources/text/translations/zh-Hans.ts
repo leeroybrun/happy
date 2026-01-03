@@ -279,7 +279,20 @@ export const zhHans: TranslationStructure = {
             notGitRepo: 'Worktree 需要 git 仓库',
             failed: ({ error }: { error: string }) => `创建 worktree 失败：${error}`,
             success: 'Worktree 创建成功',
-        }
+        },
+        resume: {
+            title: '恢复会话',
+            optional: '恢复：可选',
+            pickerTitle: '恢复会话',
+            subtitleClaude: '粘贴 Claude 会话 ID 以恢复',
+            subtitleCodex: '粘贴 Codex 会话 ID 以恢复',
+            placeholderClaude: '粘贴 Claude 会话 ID…',
+            placeholderCodex: '粘贴 Codex 会话 ID…',
+            paste: '粘贴',
+            save: '保存',
+            clearAndRemove: '清除',
+            helpText: '你可以在“会话信息”页面找到会话 ID。',
+        },
     },
 
     sessionHistory: {
@@ -331,6 +344,9 @@ export const zhHans: TranslationStructure = {
         claudeCodeSessionIdCopied: 'Claude Code 会话 ID 已复制到剪贴板',
         aiProvider: 'AI 提供商',
         failedToCopyClaudeCodeSessionId: '复制 Claude Code 会话 ID 失败',
+        codexSessionId: 'Codex 会话 ID',
+        codexSessionIdCopied: 'Codex 会话 ID 已复制到剪贴板',
+        failedToCopyCodexSessionId: '复制 Codex 会话 ID 失败',
         metadataCopied: '元数据已复制到剪贴板',
         failedToCopyMetadata: '复制元数据失败',
         failedToKillSession: '终止会话失败',

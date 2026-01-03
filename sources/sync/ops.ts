@@ -139,6 +139,7 @@ export interface SpawnSessionOptions {
     approvedNewDirectoryCreation?: boolean;
     token?: string;
     agent?: 'codex' | 'claude' | 'gemini';
+    resume?: string;
 }
 
 // Exported session operation functions
@@ -148,7 +149,7 @@ export interface SpawnSessionOptions {
  */
 export async function machineSpawnNewSession(options: SpawnSessionOptions): Promise<SpawnSessionResult> {
     
-    const { machineId, directory, approvedNewDirectoryCreation = false, token, agent } = options;
+    const { machineId, directory, approvedNewDirectoryCreation = false, token, agent, resume } = options;
 
     try {
         const result = await apiSocket.machineRPC<SpawnSessionResult, {
@@ -156,11 +157,12 @@ export async function machineSpawnNewSession(options: SpawnSessionOptions): Prom
             directory: string
             approvedNewDirectoryCreation?: boolean,
             token?: string,
-            agent?: 'codex' | 'claude' | 'gemini'
+            agent?: 'codex' | 'claude' | 'gemini',
+            resume?: string
         }>(
             machineId,
             'spawn-happy-session',
-            { type: 'spawn-in-directory', directory, approvedNewDirectoryCreation, token, agent }
+            { type: 'spawn-in-directory', directory, approvedNewDirectoryCreation, token, agent, resume }
         );
         return result;
     } catch (error) {

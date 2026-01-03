@@ -221,6 +221,21 @@ function SessionInfoContent({ session }: { session: Session }) {
                             }}
                         />
                     )}
+                    {session.metadata?.codexSessionId && (
+                        <Item
+                            title={t('sessionInfo.codexSessionId')}
+                            subtitle={`${session.metadata.codexSessionId.substring(0, 8)}...${session.metadata.codexSessionId.substring(session.metadata.codexSessionId.length - 8)}`}
+                            icon={<Ionicons name="sparkles-outline" size={29} color="#007AFF" />}
+                            onPress={async () => {
+                                try {
+                                    await Clipboard.setStringAsync(session.metadata!.codexSessionId!);
+                                    Modal.alert(t('common.success'), t('sessionInfo.codexSessionIdCopied'));
+                                } catch (error) {
+                                    Modal.alert(t('common.error'), t('sessionInfo.failedToCopyCodexSessionId'));
+                                }
+                            }}
+                        />
+                    )}
                     <Item
                         title={t('sessionInfo.connectionStatus')}
                         detail={sessionStatus.isConnected ? t('status.online') : t('status.offline')}
