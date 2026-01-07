@@ -115,6 +115,7 @@ describe('settings', () => {
                 lastUsedAgent: null,
                 lastUsedPermissionMode: null,
                 lastUsedModelMode: null,
+                messageSendMode: 'agent_queue',
             };
             const delta: Partial<Settings> = {
                 viewInline: true
@@ -164,6 +165,7 @@ describe('settings', () => {
                 lastUsedAgent: null,
                 lastUsedPermissionMode: null,
                 lastUsedModelMode: null,
+                messageSendMode: 'agent_queue',
             };
             const delta: Partial<Settings> = {};
             expect(applySettings(currentSettings, delta)).toEqual({
@@ -196,6 +198,7 @@ describe('settings', () => {
                 lastUsedAgent: null,
                 lastUsedPermissionMode: null,
                 lastUsedModelMode: null,
+                messageSendMode: 'agent_queue',
             };
             const delta: Partial<Settings> = {
                 viewInline: false
@@ -245,6 +248,7 @@ describe('settings', () => {
                 lastUsedAgent: null,
                 lastUsedPermissionMode: null,
                 lastUsedModelMode: null,
+                messageSendMode: 'agent_queue',
             };
             expect(applySettings(currentSettings, {})).toEqual({
                 ...settingsDefaults,
@@ -291,6 +295,7 @@ describe('settings', () => {
                 lastUsedAgent: null,
                 lastUsedPermissionMode: null,
                 lastUsedModelMode: null,
+                messageSendMode: 'agent_queue',
             };
             const delta: any = {
                 viewInline: false,
