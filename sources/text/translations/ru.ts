@@ -260,7 +260,18 @@ export const ru: TranslationStructure = {
             notGitRepo: 'Worktree требует наличия git репозитория',
             failed: ({ error }: { error: string }) => `Не удалось создать worktree: ${error}`,
             success: 'Worktree успешно создан',
-        }
+        },
+        resume: {
+            title: 'Продолжить сессию',
+            optional: 'Продолжить: необязательно',
+            pickerTitle: 'Продолжить сессию',
+            subtitle: 'Вставьте ID сессии Claude для продолжения',
+            placeholder: 'Вставьте ID сессии Claude…',
+            paste: 'Вставить',
+            save: 'Сохранить',
+            clearAndRemove: 'Очистить',
+            helpText: 'ID сессии можно найти на экране информации о сессии.',
+        },
     },
 
     sessionHistory: {

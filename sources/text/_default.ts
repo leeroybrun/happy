@@ -277,7 +277,18 @@ export const en = {
             notGitRepo: 'Worktrees require a git repository',
             failed: ({ error }: { error: string }) => `Failed to create worktree: ${error}`,
             success: 'Worktree created successfully',
-        }
+        },
+        resume: {
+            title: 'Resume session',
+            optional: 'Resume: Optional',
+            pickerTitle: 'Resume session',
+            subtitle: 'Paste a Claude session ID to resume',
+            placeholder: 'Paste Claude session ID…',
+            paste: 'Paste',
+            save: 'Save',
+            clearAndRemove: 'Clear',
+            helpText: 'You can find session IDs in the Session Info screen.',
+        },
     },
 
     sessionHistory: {

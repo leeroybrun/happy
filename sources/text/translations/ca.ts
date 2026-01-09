@@ -277,7 +277,18 @@ export const ca: TranslationStructure = {
             notGitRepo: 'Els worktrees requereixen un repositori git',
             failed: ({ error }: { error: string }) => `Error en crear el worktree: ${error}`,
             success: 'Worktree creat amb èxit',
-        }
+        },
+        resume: {
+            title: 'Reprendre sessió',
+            optional: 'Reprendre: Opcional',
+            pickerTitle: 'Reprendre sessió',
+            subtitle: 'Enganxa un ID de sessió de Claude per reprendre',
+            placeholder: 'Enganxa l’ID de sessió de Claude…',
+            paste: 'Enganxa',
+            save: 'Desa',
+            clearAndRemove: 'Esborra',
+            helpText: 'Pots trobar els IDs de sessió a la pantalla d’informació de sessió.',
+        },
     },
 
     sessionHistory: {

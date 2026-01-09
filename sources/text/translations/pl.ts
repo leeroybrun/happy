@@ -288,7 +288,18 @@ export const pl: TranslationStructure = {
             notGitRepo: 'Worktree wymaga repozytorium git',
             failed: ({ error }: { error: string }) => `Nie udało się utworzyć worktree: ${error}`,
             success: 'Worktree został utworzony pomyślnie',
-        }
+        },
+        resume: {
+            title: 'Wznów sesję',
+            optional: 'Wznów: Opcjonalnie',
+            pickerTitle: 'Wznów sesję',
+            subtitle: 'Wklej ID sesji Claude, aby wznowić',
+            placeholder: 'Wklej ID sesji Claude…',
+            paste: 'Wklej',
+            save: 'Zapisz',
+            clearAndRemove: 'Wyczyść',
+            helpText: 'ID sesji znajdziesz na ekranie informacji o sesji.',
+        },
     },
 
     sessionHistory: {

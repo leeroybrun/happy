@@ -277,7 +277,18 @@ export const ja: TranslationStructure = {
             notGitRepo: 'ワークツリーにはGitリポジトリが必要です',
             failed: ({ error }: { error: string }) => `ワークツリーの作成に失敗しました: ${error}`,
             success: 'ワークツリーが正常に作成されました',
-        }
+        },
+        resume: {
+            title: 'セッションを再開',
+            optional: '再開: 任意',
+            pickerTitle: 'セッションを再開',
+            subtitle: 'Claude セッションIDを貼り付けて再開',
+            placeholder: 'Claude セッションIDを貼り付け…',
+            paste: '貼り付け',
+            save: '保存',
+            clearAndRemove: 'クリア',
+            helpText: 'セッションIDはセッション情報画面で確認できます。',
+        },
     },
 
     sessionHistory: {

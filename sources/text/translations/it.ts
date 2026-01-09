@@ -274,7 +274,18 @@ export const it: TranslationStructure = {
             notGitRepo: 'Le worktree richiedono un repository git',
             failed: ({ error }: { error: string }) => `Impossibile creare la worktree: ${error}`,
             success: 'Worktree creata con successo',
-        }
+        },
+        resume: {
+            title: 'Riprendi sessione',
+            optional: 'Riprendi: opzionale',
+            pickerTitle: 'Riprendi sessione',
+            subtitle: 'Incolla un ID sessione di Claude per riprendere',
+            placeholder: 'Incolla ID sessione di Claude…',
+            paste: 'Incolla',
+            save: 'Salva',
+            clearAndRemove: 'Cancella',
+            helpText: 'Puoi trovare gli ID sessione nella schermata Informazioni sessione.',
+        },
     },
 
     sessionHistory: {
